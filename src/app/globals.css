@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050507;
+  --foreground: #f4f4f4;
 }
 
 @theme inline {
@@ -12,15 +12,213 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.75rem;
+}
+
+.navbar-wordmark {
+  font-family: var(--font-bahen-marquee), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.progress-line {
+  position: fixed;
+  inset: 0 auto auto 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: left center;
+  z-index: 90;
+  background: linear-gradient(90deg, #f2cb7a 0%, #7a9dff 100%);
+}
+
+.bahen-signature-wrap {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(240px, 34vw, 360px);
+  padding: 0.75rem 0 3.25rem;
+  isolation: isolate;
+  background-color: #050507;
+  background-image: url("/bahen-signature-desk.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bahen-signature-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 7, 0.48) 0%,
+    rgba(5, 5, 7, 0.58) 42%,
+    rgba(5, 5, 7, 0.66) 100%
+  );
+}
+
+.bahen-marquee {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 4;
+  background: transparent;
+}
+
+.bahen-marquee-strip {
+  display: flex;
+  width: max-content;
+  backface-visibility: hidden;
+  animation: bahen-marquee-scroll 20s linear infinite;
+}
+
+.bahen-marquee-top .bahen-marquee-strip {
+  animation-duration: 22s;
+}
+
+.bahen-marquee-strip-reverse {
+  animation-direction: reverse;
+  animation-duration: 28s;
+}
+
+.bahen-marquee-top {
+  top: clamp(12px, 2.2vw, 26px);
+}
+
+.bahen-marquee-bottom {
+  bottom: clamp(12px, 2.2vw, 26px);
+}
+
+.bahen-marquee-track {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  padding: 0.5rem 1.25rem;
+}
+
+.bahen-marquee-track span {
+  font-family: var(--font-bahen-marquee), var(--font-geist-sans), system-ui, sans-serif;
+  font-size: clamp(1.08rem, 1.6vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  font-feature-settings: "kern" 1, "liga" 1;
+  color: rgba(255, 255, 255, 0.97);
+  text-shadow: 0 1px 20px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bahen-marquee-strip {
+    animation-duration: 80s !important;
+  }
+}
+
+@keyframes bahen-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* CTA: açık tema — geometri süslemeleri */
+@keyframes cta-playful-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+.cta-playful-shape {
+  animation: cta-playful-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-playful-shape {
+    animation: none;
+  }
+}
+
+.faq-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #050507;
+}
+
+/*
+  Görsel <img> ile yüklenir (CSS background bazen katmanlarda kaybolabiliyor).
+  Yıkama: sol metin alanı koyu, orta/sağda görsel görünür kalsın — önceki çift gradient
+  neredeyse opaktı ve görseli tamamen yutuyordu.
+*/
+.faq-bg-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(5, 5, 7, 0.92) 0%,
+    rgba(5, 5, 7, 0.55) 26%,
+    rgba(5, 5, 7, 0.18) 48%,
+    rgba(5, 5, 7, 0.32) 72%,
+    rgba(5, 5, 7, 0.78) 100%
+  );
+}
+
+@media (min-width: 768px) {
+  .faq-bg-wash {
+    background: linear-gradient(
+      118deg,
+      rgba(5, 5, 7, 0.9) 0%,
+      rgba(5, 5, 7, 0.48) 30%,
+      rgba(5, 5, 7, 0.12) 52%,
+      rgba(5, 5, 7, 0.28) 78%,
+      rgba(5, 5, 7, 0.82) 100%
+    );
+  }
+}
+
+.faq-section > .faq-content-wrap {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes bahen-showcase-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--bahen-showcase-rotate, 0deg));
+  }
+  50% {
+    transform: translateY(-11px)
+      rotate(calc(var(--bahen-showcase-rotate, 0deg) + 1.1deg));
+  }
+}
+
+.bahen-showcase-drift {
+  animation: bahen-showcase-drift 5.5s ease-in-out infinite;
+  animation-delay: var(--bahen-showcase-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bahen-showcase-drift {
+    animation: none;
+  }
+}
+
+.showcase-float-card:hover .bahen-showcase-drift {
+  animation-play-state: paused;
 }
