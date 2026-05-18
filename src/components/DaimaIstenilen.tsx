@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VIDEO_SRC = "/kling-20260517-cinematic-973.mp4";
-const VIDEO_POSTER = "/kling-20260517-cinematic-973-poster.jpg";
+const VIDEO_SRC = "/kling-20260518-ultra-real-5598.mp4";
+const VIDEO_POSTER = "/kling-20260518-ultra-real-5598-poster.jpg";
 
 export function DaimaIstenilen() {
   const containerRef = useRef<HTMLElement>(null);

@@ -15,39 +15,6 @@ const PROJE_SAYISI = projeGorselleriTum.length;
 /** Sıralı parıldama: tam tur süresi (sn) */
 const TWINKLE_CYCLE_SEC = PROJE_SAYISI * 0.55;
 
-/** GLB PBR dokularını koru; parlak koyu metal (referans FORM mock). */
-function enhanceOriginalMetallicMaterials(scene: THREE.Object3D) {
-  scene.traverse((obj) => {
-    if (!(obj instanceof THREE.Mesh)) return;
-
-    const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
-    for (const source of materials) {
-      if (
-        !(
-          source instanceof THREE.MeshStandardMaterial ||
-          source instanceof THREE.MeshPhysicalMaterial
-        )
-      ) {
-        continue;
-      }
-
-      const hasPbrMaps =
-        !!source.metalnessMap || !!source.roughnessMap || !!source.normalMap;
-
-      if (!hasPbrMaps) {
-        source.metalness = 1;
-        source.roughness = 0.18;
-      }
-      source.envMapIntensity = 2.6;
-      if (source instanceof THREE.MeshPhysicalMaterial) {
-        source.clearcoat = 1;
-        source.clearcoatRoughness = 0.04;
-      }
-      source.needsUpdate = true;
-    }
-  });
-}
-
 type Sample = {
   position: THREE.Vector3;
   normal: THREE.Vector3;
@@ -310,9 +277,7 @@ function Sculpture({
     }
   };
 
-  useEffect(() => {
-    enhanceOriginalMetallicMaterials(scene);
-  }, [scene]);
+  // Orijinal Meshy materyali aynen korunuyor — material'a dokunulmaz.
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -421,12 +386,11 @@ export function SculptureGallery3D({
           toneMappingExposure: 1.15,
         }}
       >
-        <ambientLight intensity={0.28} />
-        <directionalLight position={[6, 5, 5]} intensity={1.65} />
-        <directionalLight position={[-4, 2, -3]} intensity={0.55} color="#c4b5a0" />
-        <pointLight position={[0, 3, 2]} intensity={0.45} color="#ffffff" />
+        <ambientLight intensity={0.35} />
+        <directionalLight position={[6, 5, 5]} intensity={1.0} />
+        <directionalLight position={[-4, 2, -3]} intensity={0.4} color="#F2E6CC" />
         <Suspense fallback={null}>
-          <Environment preset="city" background={false} environmentIntensity={2.4} />
+          <Environment preset="city" background={false} />
           <Sculpture
             hovered={hovered}
             setHovered={setHovered}

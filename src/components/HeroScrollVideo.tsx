@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 gsap.registerPlugin(ScrollTrigger);
 
 const VIDEO_SRC = "/hero-scroll-scrub.mp4";
+const VIDEO_POSTER = "/hero-scroll-scrub-poster.jpg";
 
 const EXTRA_DVH_PER_SEC = 96;
 const SCRUB_MAX_EXTRA_DVH = 168;
@@ -111,6 +112,7 @@ export function HeroScrollVideo({ children }: HeroScrollVideoProps) {
             ref={videoRef}
             className="pointer-events-none absolute left-0 top-0 h-full min-h-full w-full max-w-none object-cover object-[12%_50%] sm:object-[10%_50%]"
             src={VIDEO_SRC}
+            poster={VIDEO_POSTER}
             muted
             playsInline
             preload="auto"
@@ -130,12 +132,8 @@ export function HeroScrollVideo({ children }: HeroScrollVideoProps) {
         />
 
         <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col justify-end px-5 pb-14 pt-[4.5rem] md:px-10 md:pb-20 md:pt-24">
-          <div className="relative isolate mr-auto w-full max-w-[min(100%,38rem)] min-w-0 self-start sm:-ml-4 md:-ml-8 lg:-ml-10">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-xl bg-white/[0.02] backdrop-blur-[2px] ring-1 ring-inset ring-white/[0.08] md:rounded-2xl md:backdrop-blur-[3px] lg:rounded-[1.35rem]"
-            />
-            <div className="relative z-[1] min-w-0 px-5 py-6 sm:px-7 sm:py-7 md:px-8 md:py-8 lg:px-9 lg:py-9">
+          <div className="relative mr-auto w-full max-w-[min(100%,38rem)] min-w-0 self-start sm:-ml-4 md:-ml-8 lg:-ml-10">
+            <div className="min-w-0 px-5 py-6 sm:px-7 sm:py-7 md:px-8 md:py-8 lg:px-9 lg:py-9">
               {children}
             </div>
           </div>
