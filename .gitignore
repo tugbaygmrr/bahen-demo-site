@@ -39,3 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# editor / agent
+.claude/
+.vscode/
+.tmp-tailwind-out.css
+
+# source asset files at root (Meshy outputs, kling drafts, WhatsApp videos)
+/Meshy_AI_*
+/kling_*
+/WhatsApp*
+/ribbon.glb
+
+# backup/unused large media
+/public/hero-scroll-scrub.original.mp4
+/public/hero-scroll.mp4
+/public/kling-20260515-ultra-real-5864.mp4
+/public/kling-20260516-ultra-real-585.mp4
+/public/kling-20260516-ultra-real-700.mp4
+/public/models/

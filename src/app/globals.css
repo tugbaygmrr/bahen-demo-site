@@ -1,31 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050507;
-  --foreground: #f4f4f4;
+  /* Ana zemin — bej (korunur) */
+  --background: #eaeadf;
+  --foreground: #0a0f14;
+  /* Vurgu: lacivert */
+  --bahen-primary: #1e3a5f;
+  --bahen-primary-hover: #152d4a;
+  --bahen-ink: #0a0f14;
+  --bahen-muted: #5c6578;
+  /* Kart / panel: açık bej-beyaz */
+  --bahen-surface: #f4f4eb;
+  /* Zebra bölümler: grej-bej */
+  --bahen-surface-muted: #e2e2d6;
+  --bahen-border: #c5c9d0;
+  --font-bahen-sans: Helvetica, "Helvetica Neue", Arial, ui-sans-serif, sans-serif;
+  --font-bahen-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bahen-primary: var(--bahen-primary);
+  --color-bahen-primary-hover: var(--bahen-primary-hover);
+  --color-bahen-ink: var(--bahen-ink);
+  --color-bahen-muted: var(--bahen-muted);
+  --color-bahen-surface: var(--bahen-surface);
+  --color-bahen-surface-muted: var(--bahen-surface-muted);
+  --color-bahen-border: var(--bahen-border);
+  --font-sans: var(--font-bahen-sans);
+  --font-mono: var(--font-bahen-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-bahen-sans);
   overflow-x: hidden;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
 html {
-  scroll-behavior: smooth;
+  /* `smooth` + scroll-tetikli video scrub ana iş parçacığında sürtüşür; #hero scrub için `auto`. */
+  scroll-behavior: auto;
   scroll-padding-top: 5.75rem;
 }
 
 .navbar-wordmark {
-  font-family: var(--font-bahen-marquee), var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-bahen-sans);
 }
 
 .progress-line {
@@ -35,7 +58,7 @@ html {
   width: 100%;
   transform-origin: left center;
   z-index: 90;
-  background: linear-gradient(90deg, #f2cb7a 0%, #7a9dff 100%);
+  background: linear-gradient(90deg, transparent 0%, #1e3a5f 55%, #0a0f14 100%);
 }
 
 .bahen-signature-wrap {
@@ -44,7 +67,8 @@ html {
   min-height: clamp(240px, 34vw, 360px);
   padding: 0.75rem 0 3.25rem;
   isolation: isolate;
-  background-color: #050507;
+  background-color: var(--bahen-surface-muted);
+
   background-image: url("/bahen-signature-desk.png");
   background-size: cover;
   background-position: center;
@@ -59,9 +83,9 @@ html {
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(5, 5, 7, 0.48) 0%,
-    rgba(5, 5, 7, 0.58) 42%,
-    rgba(5, 5, 7, 0.66) 100%
+    rgba(244, 244, 235, 0.9) 0%,
+    rgba(234, 234, 223, 0.78) 42%,
+    rgba(244, 244, 235, 0.88) 100%
   );
 }
 
@@ -107,13 +131,13 @@ html {
 }
 
 .bahen-marquee-track span {
-  font-family: var(--font-bahen-marquee), var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-bahen-sans);
   font-size: clamp(1.08rem, 1.6vw, 1.65rem);
   font-weight: 600;
   letter-spacing: -0.035em;
   font-feature-settings: "kern" 1, "liga" 1;
-  color: rgba(255, 255, 255, 0.97);
-  text-shadow: 0 1px 20px rgba(0, 0, 0, 0.45);
+  color: rgba(28, 24, 20, 0.88);
+  text-shadow: 0 1px 0 rgba(244, 244, 235, 0.75);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -156,7 +180,7 @@ html {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background-color: #050507;
+  background-color: var(--bahen-surface);
 }
 
 /*
@@ -171,11 +195,11 @@ html {
   pointer-events: none;
   background: linear-gradient(
     115deg,
-    rgba(5, 5, 7, 0.92) 0%,
-    rgba(5, 5, 7, 0.55) 26%,
-    rgba(5, 5, 7, 0.18) 48%,
-    rgba(5, 5, 7, 0.32) 72%,
-    rgba(5, 5, 7, 0.78) 100%
+    rgba(234, 234, 223, 0.94) 0%,
+    rgba(234, 234, 223, 0.72) 26%,
+    rgba(234, 234, 223, 0.2) 48%,
+    rgba(220, 220, 208, 0.45) 72%,
+    rgba(234, 234, 223, 0.9) 100%
   );
 }
 
@@ -183,11 +207,11 @@ html {
   .faq-bg-wash {
     background: linear-gradient(
       118deg,
-      rgba(5, 5, 7, 0.9) 0%,
-      rgba(5, 5, 7, 0.48) 30%,
-      rgba(5, 5, 7, 0.12) 52%,
-      rgba(5, 5, 7, 0.28) 78%,
-      rgba(5, 5, 7, 0.82) 100%
+      rgba(234, 234, 223, 0.92) 0%,
+      rgba(234, 234, 223, 0.55) 30%,
+      rgba(234, 234, 223, 0.08) 52%,
+      rgba(220, 220, 208, 0.35) 78%,
+      rgba(234, 234, 223, 0.88) 100%
     );
   }
 }
@@ -195,30 +219,4 @@ html {
 .faq-section > .faq-content-wrap {
   position: relative;
   z-index: 2;
-}
-
-@keyframes bahen-showcase-drift {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--bahen-showcase-rotate, 0deg));
-  }
-  50% {
-    transform: translateY(-11px)
-      rotate(calc(var(--bahen-showcase-rotate, 0deg) + 1.1deg));
-  }
-}
-
-.bahen-showcase-drift {
-  animation: bahen-showcase-drift 5.5s ease-in-out infinite;
-  animation-delay: var(--bahen-showcase-delay, 0s);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bahen-showcase-drift {
-    animation: none;
-  }
-}
-
-.showcase-float-card:hover .bahen-showcase-drift {
-  animation-play-state: paused;
 }

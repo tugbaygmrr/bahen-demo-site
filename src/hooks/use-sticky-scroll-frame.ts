@@ -3,7 +3,7 @@
 import { type MutableRefObject, type RefObject, useEffect, useRef } from "react";
 
 /** Sticky pin: 0 = bölüm üstte, 1 = bölüm kaydırması bitti */
-function viewportHeightPx(): number {
+export function viewportHeightPx(): number {
   if (typeof window === "undefined") return 0;
   const vv = window.visualViewport;
   if (vv && vv.height > 0) return vv.height;

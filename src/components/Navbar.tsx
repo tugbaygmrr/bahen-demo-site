@@ -20,7 +20,7 @@ const navLinks = [
 
 const projectsSubmenu = [
   { href: "#projeler", label: "Tüm projeler" },
-  { href: "#proje-sahnesi", label: "Proje sahnesi" },
+  { href: "#proje-gorselleri", label: "Proje sahnesi" },
   { href: "#surec", label: "Süreç" },
 ] as const;
 
@@ -77,13 +77,42 @@ function ChevronDown({ className, open }: { className?: string; open: boolean })
 }
 
 const linkClass =
-  "rounded-md px-2 py-2 text-[11px] font-semibold tracking-[0.12em] text-white/70 uppercase transition hover:bg-white/[0.06] hover:text-white xl:px-2.5 xl:text-[11.5px]";
+  "inline-flex items-center rounded-md px-2 py-2 text-[11px] font-semibold tracking-[0.12em] text-bahen-muted uppercase transition hover:bg-white hover:text-bahen-ink xl:px-2.5 xl:text-[11.5px]";
+
+const linkClassHero =
+  "inline-flex items-center rounded-md px-2 py-2 text-[11px] font-semibold tracking-[0.12em] text-white/88 uppercase transition hover:bg-white/10 hover:text-white xl:px-2.5 xl:text-[11.5px]";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const [solidNav, setSolidNav] = useState(false);
   const projectsWrapRef = useRef<HTMLLIElement>(null);
+
+  const effectiveSolid = solidNav || mobileOpen;
+
+  useEffect(() => {
+    const section = document.getElementById("kurumsal");
+    if (!section) return;
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      const top = section.getBoundingClientRect().top;
+      setSolidNav(top < 88);
+    };
+    const onScroll = () => {
+      if (raf !== 0) return;
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf !== 0) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -118,19 +147,38 @@ export function Navbar() {
     setMobileProjectsOpen(false);
   };
 
-  const socialBtnClass =
-    "flex h-9 w-9 items-center justify-center rounded-lg border border-white/12 bg-white/[0.04] text-white/75 transition hover:border-white/22 hover:bg-white/[0.08] hover:text-white";
+  const desktopLinkClass = effectiveSolid ? linkClass : linkClassHero;
+
+  const socialBtnClass = effectiveSolid
+    ? "flex h-9 w-9 items-center justify-center rounded-lg border border-bahen-border bg-bahen-surface-muted text-bahen-muted transition hover:border-bahen-primary/30 hover:bg-white hover:text-bahen-ink"
+    : "flex h-9 w-9 items-center justify-center rounded-lg border border-white/25 bg-white/10 text-white transition hover:border-white/40 hover:bg-white/16";
 
   return (
-    <header className="navbar-shell fixed top-0 right-0 left-0 z-[80] border-b border-white/[0.07] bg-[#050507]/78 backdrop-blur-2xl backdrop-saturate-150">
-      <div className="pointer-events-none absolute inset-x-0 top-full h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+    <header
+      className={
+        effectiveSolid
+          ? "navbar-shell fixed top-0 right-0 left-0 z-[80] border-b border-bahen-border/90 bg-background/92 backdrop-blur-2xl backdrop-saturate-150"
+          : "navbar-shell fixed top-0 right-0 left-0 z-[80] border-b border-white/10 bg-black/8 backdrop-blur-xl"
+      }
+    >
+      <div
+        className={
+          effectiveSolid
+            ? "pointer-events-none absolute inset-x-0 top-full h-px bg-gradient-to-r from-transparent via-[#c5c9d0] to-transparent"
+            : "pointer-events-none absolute inset-x-0 top-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        }
+      />
       <nav
         className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-10 md:py-3.5"
         aria-label="Ana"
       >
         <a
           href="#hero"
-          className="navbar-wordmark shrink-0 text-[15px] font-semibold tracking-tight text-white transition hover:text-white/90"
+          className={
+            effectiveSolid
+              ? "navbar-wordmark shrink-0 text-[15px] font-semibold tracking-tight text-bahen-ink transition hover:text-bahen-primary"
+              : "navbar-wordmark shrink-0 text-[15px] font-semibold tracking-tight text-white transition hover:text-white/85"
+          }
           onClick={closeAll}
         >
           Bahen.
@@ -138,16 +186,16 @@ export function Navbar() {
 
         <ul className="hidden items-center gap-0.5 xl:flex">
           {navLinks.map(({ href, label }) => (
-            <li key={href}>
-              <a href={href} className={linkClass}>
+            <li key={href} className="flex items-center">
+              <a href={href} className={desktopLinkClass}>
                 {label}
               </a>
             </li>
           ))}
-          <li className="relative" ref={projectsWrapRef}>
+          <li className="relative flex items-center" ref={projectsWrapRef}>
             <button
               type="button"
-              className={`${linkClass} inline-flex items-center gap-1`}
+              className={`${desktopLinkClass} gap-1`}
               aria-expanded={projectsOpen}
               aria-haspopup="true"
               onClick={(e) => {
@@ -160,7 +208,7 @@ export function Navbar() {
             </button>
             {projectsOpen ? (
               <ul
-                className="absolute top-full left-0 z-[90] mt-1 min-w-[12.5rem] rounded-xl border border-white/12 bg-[#0c0c10]/95 py-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+                className="absolute top-full left-0 z-[90] mt-1 min-w-[12.5rem] rounded-xl border border-bahen-border bg-bahen-surface py-1.5 shadow-[0_16px_40px_-8px_rgba(28,24,20,0.1)] backdrop-blur-xl"
                 role="menu"
               >
                 {projectsSubmenu.map(({ href, label }) => (
@@ -168,7 +216,7 @@ export function Navbar() {
                     <a
                       href={href}
                       role="menuitem"
-                      className="block px-4 py-2.5 text-[12px] font-medium tracking-wide text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                      className="block px-4 py-2.5 text-[12px] font-medium tracking-wide text-bahen-muted transition hover:bg-bahen-surface-muted hover:text-bahen-ink"
                       onClick={() => setProjectsOpen(false)}
                     >
                       {label}
@@ -183,7 +231,7 @@ export function Navbar() {
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           <a
             href={MAIL_HREF}
-            className="rounded-lg border border-white/18 bg-white px-4 py-2 text-[11px] font-semibold tracking-[0.1em] text-[#050507] uppercase transition hover:bg-white/90"
+            className="rounded-lg border border-black bg-black px-4 py-2 text-[11px] font-semibold tracking-[0.1em] text-white uppercase transition hover:border-neutral-950 hover:bg-neutral-950"
           >
             Teklif alın
           </a>
@@ -212,7 +260,11 @@ export function Navbar() {
 
         <button
           type="button"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] text-white xl:hidden"
+          className={
+            effectiveSolid
+              ? "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bahen-border bg-bahen-surface-muted text-bahen-ink xl:hidden"
+              : "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white xl:hidden"
+          }
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü aç"}
@@ -236,7 +288,7 @@ export function Navbar() {
 
       <div
         id="mobile-nav"
-        className={`border-t border-white/[0.06] bg-[#050507]/97 backdrop-blur-2xl xl:hidden ${
+        className={`border-t border-bahen-border bg-background/98 backdrop-blur-2xl xl:hidden ${
           mobileOpen ? "block" : "hidden"
         }`}
       >
@@ -245,7 +297,7 @@ export function Navbar() {
             <li key={href}>
               <a
                 href={href}
-                className="block rounded-xl px-3 py-3 text-[13px] font-semibold tracking-[0.12em] text-white/80 uppercase transition hover:bg-white/[0.06] hover:text-white"
+                className="block rounded-xl px-3 py-3 text-[13px] font-semibold tracking-[0.12em] text-bahen-muted uppercase transition hover:bg-bahen-surface-muted hover:text-bahen-ink"
                 onClick={closeAll}
               >
                 {label}
@@ -255,7 +307,7 @@ export function Navbar() {
           <li>
             <button
               type="button"
-              className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-[13px] font-semibold tracking-[0.12em] text-white/80 uppercase transition hover:bg-white/[0.06] hover:text-white"
+              className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-[13px] font-semibold tracking-[0.12em] text-bahen-muted uppercase transition hover:bg-bahen-surface-muted hover:text-bahen-ink"
               aria-expanded={mobileProjectsOpen}
               onClick={() => setMobileProjectsOpen((v) => !v)}
             >
@@ -263,12 +315,12 @@ export function Navbar() {
               <ChevronDown open={mobileProjectsOpen} className="opacity-70" />
             </button>
             {mobileProjectsOpen ? (
-              <ul className="ml-2 border-l border-white/10 py-1 pl-3">
+              <ul className="ml-2 border-l border-bahen-border py-1 pl-3">
                 {projectsSubmenu.map(({ href, label }) => (
                   <li key={href + label}>
                     <a
                       href={href}
-                      className="block rounded-lg py-2 text-[13px] text-white/65 transition hover:text-white"
+                      className="block rounded-lg py-2 text-[13px] text-bahen-muted transition hover:text-bahen-ink"
                       onClick={closeAll}
                     >
                       {label}
@@ -281,7 +333,7 @@ export function Navbar() {
           <li className="pt-2">
             <a
               href={MAIL_HREF}
-              className="block rounded-lg border border-white/16 bg-white py-3 text-center text-[13px] font-semibold tracking-[0.1em] text-[#050507] uppercase"
+              className="block rounded-lg border border-black bg-black py-3 text-center text-[13px] font-semibold tracking-[0.1em] text-white uppercase transition hover:border-neutral-950 hover:bg-neutral-950"
               onClick={closeAll}
             >
               Teklif alın

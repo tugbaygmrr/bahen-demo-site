@@ -1,124 +1,141 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion, useReducedMotion } from "framer-motion";
-import type { CSSProperties, ReactNode } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
 
-import { projeGorselleriBackdrop } from "@/data/proje-gorselleri-backdrop";
+gsap.registerPlugin(ScrollTrigger);
 
-const ShowcaseIndustrialModel = dynamic(
+const SculptureGallery3D = dynamic(
   () =>
-    import("@/components/ShowcaseIndustrialModel").then((m) => m.ShowcaseIndustrialModel),
+    import("@/components/SculptureGallery3D").then((m) => m.SculptureGallery3D),
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-[min(48vh,520px)] w-full items-center justify-center md:h-[min(56vh,620px)] lg:h-[min(62vh,700px)]">
-        <p className="text-[13px] text-white/45">3D model yükleniyor…</p>
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-[13px] text-bahen-muted">3D sahne yükleniyor…</p>
       </div>
     ),
   },
 );
 
-type ShowcaseStageSectionProps = {
-  children?: ReactNode;
-};
+export function ShowcaseStageSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [canvasActive, setCanvasActive] = useState(false);
 
-export function ShowcaseStageSection({ children }: ShowcaseStageSectionProps) {
-  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => setCanvasActive(entry.isIntersecting),
+      { rootMargin: "160px 0px" },
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const st = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1,
+      fastScrollEnd: true,
+      onUpdate: (self) => setProgress(self.progress),
+    });
+
+    return () => {
+      st.kill();
+    };
+  }, []);
+
+  const ease = (x: number) =>
+    x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  const p = ease(Math.max(0, Math.min(1, progress)));
+  const darkOpacity = p * 0.92;
 
   return (
     <section
-      id="proje-sahnesi"
-      className="relative isolate min-h-[min(92dvh,920px)] overflow-hidden border-b border-white/[0.06] bg-[#050507]"
-      aria-labelledby="proje-sahnesi-baslik"
+      ref={sectionRef}
+      id="proje-gorselleri"
+      className="relative scroll-mt-20 border-b border-bahen-border bg-bahen-surface-muted"
+      style={{ minHeight: "220dvh" }}
+      aria-labelledby="proje-gorselleri-baslik"
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(90,110,200,0.12),transparent_65%),radial-gradient(ellipse_50%_40%_at_80%_20%,rgba(245,215,138,0.06),transparent_55%)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,7,0.55)_0%,rgba(5,5,7,0.25)_28%,rgba(5,5,7,0.35)_55%,rgba(5,5,7,0.92)_100%)]"
-        aria-hidden
-      />
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{ backgroundColor: "#0A0907", opacity: darkOpacity }}
+        />
 
-      <div className="absolute inset-0 z-0 flex justify-center px-4 md:px-8">
-        <div className="relative h-full w-full max-w-[88rem]">
-        {projeGorselleriBackdrop.map((panel, index) => (
-          <motion.div
-            key={`${panel.src}-${index}`}
-            className={`showcase-float-card pointer-events-auto absolute ${panel.className}`}
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.12 }}
-            transition={{ duration: 0.65, delay: panel.delay }}
-            whileHover={
-              reduceMotion
-                ? undefined
-                : {
-                    scale: 1.12,
-                    rotate: 0,
-                    zIndex: 5,
-                    transition: { type: "spring", stiffness: 380, damping: 26 },
-                  }
-            }
-          >
-            <div className="relative overflow-hidden rounded-xl ring-1 ring-white/[0.07]">
-              <img
-                src={panel.src}
-                alt={panel.label}
-                className={`h-auto w-full object-cover shadow-[0_20px_50px_-16px_rgba(0,0,0,0.8)] [image-rendering:auto] contrast-[1.03] ${reduceMotion ? "" : "bahen-showcase-drift"}`}
-                style={
-                  {
-                    ["--bahen-showcase-rotate"]: `${panel.rotate}deg`,
-                    ["--bahen-showcase-delay"]: `${panel.delay}s`,
-                  } as CSSProperties
-                }
-                loading={index < 2 ? "eager" : "lazy"}
-                decoding="async"
-                fetchPriority={index === 0 ? "high" : undefined}
-                sizes="(max-width: 768px) 40vw, 280px"
-              />
-            </div>
-          </motion.div>
-        ))}
+        <div className="absolute inset-0 z-20">
+          {canvasActive ? (
+            <SculptureGallery3D activeProgress={progress} renderActive={canvasActive} />
+          ) : (
+            <div
+              className="flex h-full w-full items-center justify-center bg-bahen-surface-muted"
+              aria-hidden
+            />
+          )}
         </div>
-      </div>
 
-      <div className="relative z-20 mx-auto flex min-h-[min(92dvh,920px)] max-w-6xl flex-col px-5 pt-10 pb-24 md:px-10 md:pt-14 md:pb-28">
-        <div className="pointer-events-auto relative mb-8 max-w-3xl md:mb-10">
-          <div
-            className="rounded-2xl border border-white/[0.08] bg-[#050507]/82 px-5 py-6 shadow-[0_8px_40px_-8px_rgba(0,0,0,0.75)] backdrop-blur-md md:px-7 md:py-7"
-            style={{
-              boxShadow:
-                "0 8px 40px -8px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.06)",
-            }}
-          >
-            <h2
-              id="proje-sahnesi-baslik"
-              className="navbar-wordmark text-balance text-2xl leading-[1.1] font-semibold tracking-[-0.03em] uppercase md:text-4xl lg:text-[2.65rem] lg:leading-[1.06]"
+        <div className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
+          <div className="relative mx-auto h-full max-w-7xl px-5 md:px-10">
+            <div
+              className="absolute inset-y-0 left-5 flex w-[36%] max-w-md flex-col justify-center md:left-10"
+              style={{
+                opacity: Math.max(0, 1 - p * 2.4),
+                transform: `translateX(${-p * 28}px)`,
+              }}
             >
-              <span
-                className="bg-gradient-to-br from-[#f5d78a] via-[#fafafa] to-[#9aacff] bg-clip-text text-transparent"
-                style={{
-                  filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.85))",
-                }}
+              <p className="text-[11px] font-semibold tracking-[0.35em] text-bahen-muted uppercase">
+                (01)
+              </p>
+              <h2
+                id="proje-gorselleri-baslik"
+                className="navbar-wordmark mt-4 text-balance text-3xl font-semibold tracking-[-0.03em] text-bahen-ink md:text-4xl lg:text-[2.4rem] lg:leading-[1.08]"
               >
-                Her proje
-              </span>
-              <span
-                className="mt-1 block text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.9)] md:mt-1.5"
-                style={{ opacity: 0.94 }}
-              >
-                ortak bir hikâyenin parçası.
-              </span>
-            </h2>
+                Sahada gördüğümüz her detay,{" "}
+                <span className="text-bahen-muted">çizim masasında</span> başlar.
+              </h2>
+              <p className="mt-5 max-w-md text-[15px] leading-relaxed text-bahen-muted md:text-base">
+                Karma yapı, hastane, otel ve endüstri referanslarımızdan kesitler. Hepsi tek
+                mühendislik disipliniyle: tasarım, dokümantasyon ve şantiye uyumu.
+              </p>
+              <p className="mt-8 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.3em] text-bahen-muted uppercase">
+                <span aria-hidden>↓</span> Aşağı kaydırın
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
-          <div className="relative z-10 w-full" data-showcase-model-root>
-            {children ?? <ShowcaseIndustrialModel />}
-          </div>
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 z-40 mx-auto max-w-7xl px-5 pt-28 md:px-10 md:pt-32"
+          style={{
+            opacity: Math.max(0, (p - 0.3) * 2),
+            transform: `translateY(${Math.max(0, (1 - p) * 12)}px)`,
+          }}
+        >
+          <p className="text-[11px] font-semibold tracking-[0.4em] text-white/70 uppercase">
+            (02) Proje görselleri
+          </p>
+          <h3 className="navbar-wordmark mt-3 max-w-2xl text-balance text-2xl font-semibold tracking-[-0.025em] text-white md:text-3xl lg:text-[2.1rem] lg:leading-[1.08]">
+            Yapılarda iz bırakan{" "}
+            <span className="text-white/55">karma yapı, hastane, endüstri</span> projelerimiz.
+          </h3>
+          <p
+            className="mt-4 max-w-md text-[13px] leading-relaxed text-white/65 md:text-sm"
+            style={{ opacity: Math.max(0, (p - 0.5) * 2.2) }}
+          >
+            Heykel üstündeki noktalara tıklayın — her bir nokta bir projeyi temsil eder.
+          </p>
         </div>
       </div>
     </section>

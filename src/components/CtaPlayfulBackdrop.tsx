@@ -40,27 +40,27 @@ const CORP_DARK = {
 } as const;
 
 const CORP_LIGHT = {
-  slate: "bg-[#8FA3B8]",
-  steel: "bg-[#B8C0CA]",
-  blueGray: "bg-[#A8B4C4]",
-  deepBlue: "bg-[#7D8FA3]",
-  coolGray: "bg-[#9AA3AD]",
-  ring: "bg-[#C5CCD4]",
-  tealGray: "bg-[#9DADAD]",
-  mauveGray: "bg-[#B0ADB8]",
-  bar: "bg-[#94A3B8]",
-  accentBrass: "bg-[#B5A896]",
-  star: "text-[#94A3B2]",
-  triFill: "#9CA8B4",
+  slate: "bg-[#C4B49C]",
+  steel: "bg-[#D4C8B4]",
+  blueGray: "bg-[#BFAF9C]",
+  deepBlue: "bg-[#A89478]",
+  coolGray: "bg-[#C0B4A4]",
+  ring: "bg-[#D8CFBC]",
+  tealGray: "bg-[#B8AC9C]",
+  mauveGray: "bg-[#C0B4A0]",
+  bar: "bg-[#B8AA94]",
+  accentBrass: "bg-[#C0A868]",
+  star: "text-[#A89878]",
+  triFill: "#C0B09A",
 } as const;
 
 export function CtaPlayfulBackdrop({ dark = false }: CtaPlayfulBackdropProps) {
   const c = dark ? CORP_DARK : CORP_LIGHT;
-  const stroke = dark ? "border-2 border-white/14" : "border-2 border-[#2A3140]/55";
-  const extrude = dark ? "4px 5px 0 rgba(0,0,0,0.5)" : "3px 4px 0 rgba(42,49,64,0.35)";
-  const extrudeSm = dark ? "3px 4px 0 rgba(0,0,0,0.45)" : "2px 3px 0 rgba(42,49,64,0.3)";
-  const svgStroke = dark ? "rgba(255,255,255,0.16)" : "rgba(42,49,64,0.45)";
-  const ringBorder = dark ? "border-[3px] border-white/16" : "border-[3px] border-[#2A3140]/45";
+  const stroke = dark ? "border-2 border-white/14" : "border-2 border-[#7A6A50]/50";
+  const extrude = dark ? "4px 5px 0 rgba(0,0,0,0.5)" : "3px 4px 0 rgba(30,58,95,0.25)";
+  const extrudeSm = dark ? "3px 4px 0 rgba(0,0,0,0.45)" : "2px 3px 0 rgba(30,58,95,0.18)";
+  const svgStroke = dark ? "rgba(255,255,255,0.16)" : "rgba(30,58,95,0.35)";
+  const ringBorder = dark ? "border-[3px] border-white/16" : "border-[3px] border-[#7A6A50]/40";
 
   return (
     <div

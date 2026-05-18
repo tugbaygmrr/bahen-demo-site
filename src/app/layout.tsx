@@ -1,22 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-bahen-marquee",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Bahen | Daima İstenilen",
@@ -30,11 +14,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} min-h-full antialiased`}
-    >
-      <body className="flex min-h-dvh min-w-0 flex-col overflow-x-clip">{children}</body>
+    <html lang="tr" className="min-h-full antialiased">
+      <head>
+        <link rel="preload" as="video" href="/hero-scroll-scrub.mp4" type="video/mp4" />
+        <link rel="preload" as="fetch" href="/ribbon.glb" crossOrigin="anonymous" />
+
+        {/* Proje görselleri proxy'si bahen.com.tr'den çekiyor — TCP elden geçsin */}
+        <link rel="dns-prefetch" href="https://www.bahen.com.tr" />
+        <link rel="preconnect" href="https://www.bahen.com.tr" crossOrigin="anonymous" />
+      </head>
+      <body className="flex min-h-dvh min-w-0 flex-col overflow-x-clip bg-background text-foreground">
+        {children}
+      </body>
     </html>
   );
 }
