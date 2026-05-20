@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="tr" className="min-h-full antialiased">
       <head>
         <link rel="preload" as="video" href="/hero-scroll-scrub.mp4" type="video/mp4" />
-        <link rel="preload" as="fetch" href="/ribbon.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/ribbon.opt.glb" crossOrigin="anonymous" />
 
         {/* Proje görselleri proxy'si bahen.com.tr'den çekiyor — TCP elden geçsin */}
         <link rel="dns-prefetch" href="https://www.bahen.com.tr" />

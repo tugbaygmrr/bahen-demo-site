@@ -9,8 +9,8 @@ gsap.registerPlugin(ScrollTrigger);
 const VIDEO_SRC = "/hero-scroll-scrub.mp4";
 const VIDEO_POSTER = "/hero-scroll-scrub-poster.jpg";
 
-const EXTRA_DVH_PER_SEC = 96;
-const SCRUB_MAX_EXTRA_DVH = 168;
+const EXTRA_DVH_PER_SEC = 170;
+const SCRUB_MAX_EXTRA_DVH = 300;
 
 const HINT_IDLE = "Keşfetmek için kaydırın";
 const HINT_SCRUB = "Kaydırarak videoyu ilerletin";

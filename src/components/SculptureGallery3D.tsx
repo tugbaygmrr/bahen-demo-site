@@ -8,8 +8,8 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 import { projeGorselleriTum } from "@/data/proje-gorselleri-tum";
 
-/** Meshy texture GLB — kullanıcı referans dosyası */
-const SCULPTURE_URL = "/ribbon.glb";
+/** Meshy texture GLB — Meshopt geometry + WebP texture (1024px), ~540KB */
+const SCULPTURE_URL = "/ribbon.opt.glb";
 
 const PROJE_SAYISI = projeGorselleriTum.length;
 /** Sıralı parıldama: tam tur süresi (sn) */
@@ -255,7 +255,7 @@ function Sculpture({
   setHovered: (i: number | null) => void;
   activeProgress: number;
 }) {
-  const gltf = useGLTF(SCULPTURE_URL);
+  const gltf = useGLTF(SCULPTURE_URL, undefined, true);
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
   const samples = useSurfaceSamples(scene, PROJE_SAYISI);
   const groupRef = useRef<THREE.Group>(null);
@@ -306,7 +306,7 @@ function Sculpture({
   );
 }
 
-useGLTF.preload(SCULPTURE_URL);
+useGLTF.preload(SCULPTURE_URL, undefined, true);
 
 const DEFAULT_CAM_POS = new THREE.Vector3(0, 0.4, 4.5);
 const DEFAULT_TARGET = new THREE.Vector3(0, 0, 0);
@@ -377,7 +377,7 @@ export function SculptureGallery3D({
       <Canvas
         camera={{ position: [0, 0.4, 4.5], fov: 42 }}
         dpr={[1, 1.5]}
-        frameloop={renderActive ? "always" : "never"}
+        frameloop={renderActive ? "always" : "demand"}
         gl={{
           antialias: true,
           alpha: true,
@@ -390,12 +390,14 @@ export function SculptureGallery3D({
         <directionalLight position={[6, 5, 5]} intensity={1.0} />
         <directionalLight position={[-4, 2, -3]} intensity={0.4} color="#F2E6CC" />
         <Suspense fallback={null}>
-          <Environment preset="city" background={false} />
           <Sculpture
             hovered={hovered}
             setHovered={setHovered}
             activeProgress={activeProgress}
           />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Environment preset="city" background={false} />
         </Suspense>
         <OrbitControls
           ref={controlsRef}

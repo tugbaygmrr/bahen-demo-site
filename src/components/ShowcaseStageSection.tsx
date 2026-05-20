@@ -76,14 +76,7 @@ export function ShowcaseStageSection() {
         />
 
         <div className="absolute inset-0 z-20">
-          {canvasActive ? (
-            <SculptureGallery3D activeProgress={progress} renderActive={canvasActive} />
-          ) : (
-            <div
-              className="flex h-full w-full items-center justify-center bg-bahen-surface-muted"
-              aria-hidden
-            />
-          )}
+          <SculptureGallery3D activeProgress={progress} renderActive={canvasActive} />
         </div>
 
         <div className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
